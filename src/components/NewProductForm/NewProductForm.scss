@@ -1,0 +1,14 @@
+.form {
+  width: 270px;
+
+  &__input {
+    margin-bottom: 14px;
+  }
+
+  &__icon {
+    height: 14px;
+    width: 14px;
+    margin-right: 10px;
+    background-image: url(../../images/upload-solid.svg);
+  }
+}

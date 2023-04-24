@@ -1,56 +1,96 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import './App.scss';
+import 'bulma/bulma.sass';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import { Product } from './types/Product';
+import { remove } from './features/products/productsSlice';
+import { pinned } from './features/pinnedProduct/pinnedProductSlice';
+import { NewProductForm } from './components/NewProductForm';
+import { SearchForm } from './components/SearchForm';
+import classNames from 'classnames';
+import { useMemo } from 'react';
 
-function App() {
+const App:React.FC = () => {
+  const dispatch = useAppDispatch();
+  const products = useAppSelector(state => state.products);
+  const pinnedProductId = useAppSelector(state => state.pinnedProduct); 
+  const searchQuery = useAppSelector(state => state.searchQuery);
+
+  const filteredProducts = useMemo(() => products.filter(product => 
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    || product.description.toLowerCase().includes(searchQuery.toLowerCase())),
+  [products, searchQuery]);
+
+  const handleRemoveClick = (id: number) => {
+    dispatch(remove(id));
+
+    if (pinnedProductId === id) {
+      dispatch(pinned(0));
+    }
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <div className="container">
+        <header>
+          <SearchForm />
+          
+          {!filteredProducts.length && !!products.length && (
+            <p className="help is-danger">
+              Such kind of products is not on the list
+            </p>
+          )}
+        </header>
+
+        <main>
+          {
+            <div className="App-products products">
+              {filteredProducts.map(({ 
+                name, 
+                price, 
+                description, 
+                imgURL, 
+                id, 
+              }: Product) => (
+                <div 
+                  className="App-productCard productCard" 
+                  key={id} 
+                  style={{order: id === pinnedProductId ? -1 : 0}}
+                >
+                  <div className="productCard__icons">
+                    <div
+                      className={classNames(
+                        'productCard__icon productCard__icon--pin',
+                        {'productCard__icon--pinned': id === pinnedProductId}
+                      )}
+                      
+                      onClick={() => dispatch(pinned(id))}
+                    ></div>
+
+                    <div 
+                      className='productCard__icon productCard__icon--cross'
+                      onClick={() => handleRemoveClick(id)}
+                    ></div>
+                  </div>
+                        
+                  <div className='productCard__image-container'>
+                    <img 
+                      className='productCard__image' 
+                      src={typeof imgURL === 'string' ? imgURL : ''} 
+                      alt="product image" 
+                    />
+                  </div>
+                  <h3 className='productCard__title'>{name}</h3>
+
+                  <div className="productCard__price">{`$${price}`}</div>
+
+                  <div className="productCard__description">{description}</div>
+                </div>
+              ))}
+              {<NewProductForm />}
+            </div>
+          }
+        </main>
+      </div>
     </div>
   );
 }

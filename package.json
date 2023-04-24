@@ -1,5 +1,6 @@
 {
   "name": "test_task_3",
+  "homepage": "https://Andrii-Kuzmenko.github.io/test_task_3",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,6 +12,11 @@
     "@types/node": "^17.0.45",
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
+    "bulma": "^0.9.4",
+    "classnames": "^2.3.2",
+    "eslint": "^8.38.0",
+    "gh-pages": "^5.0.0",
+    "node-sass": "^8.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
@@ -19,6 +25,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

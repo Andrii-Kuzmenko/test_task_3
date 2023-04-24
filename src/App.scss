@@ -1,0 +1,99 @@
+@import '/src/styles/mixins.scss';
+
+$image-height: 185px;
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  @include onBig {
+    padding: 0 40px;
+  }
+}
+
+.products {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  column-gap: 10px;
+  row-gap: 40px;
+  padding-bottom: 20px;
+
+  @include onMiddle {
+    grid-template-columns: 1fr 1fr;
+  }
+  @include onBig {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.productCard {
+  width: 250px;
+  padding: 20px 20px 0;
+  border: 1px solid #E2E6E9;
+  word-break: break-all;
+
+  &__icons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  &__icon {
+    height: 14px;
+    width: 14px;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    @include hover(transform, scale(1.2));
+
+    &--pin {
+      background-image: url(images/pin_gray.svg);
+    }
+    
+    &--pinned {
+      background-image: url(images/pin.svg);
+    }
+    &--cross {
+      background-image: url(images/cross.svg);
+    }
+  }
+
+  &__image-container {
+    height: $image-height;
+    margin-bottom: 20px;
+  }
+  
+  &__image {
+    width: 100%;
+    height: $image-height;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  &__title {
+    margin: 0 0 6px;
+    min-height: 3em;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+
+    color: #313237;
+  }
+  
+  &__price {
+    margin-bottom: 8px;
+    border-bottom: 1px solid #E2E6E9;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 31px;
+
+    color: #313237;
+  }
+
+  &__description {
+    max-height: 4em;
+    margin-bottom: 20px;
+  }
+}
